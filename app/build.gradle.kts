@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.site"
+    namespace = "com.example.store"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.site"
+        applicationId = "com.example.store"
         minSdk = 24
         targetSdk = 35
         versionCode = 1

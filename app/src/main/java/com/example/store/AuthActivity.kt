@@ -1,4 +1,4 @@
-package com.example.site
+package com.example.store
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,15 +7,15 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.site.databinding.ActivityMainBinding
+import com.example.store.databinding.ActivityAuthBinding
 
-class MainActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityMainBinding
+class AuthActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityAuthBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivityAuthBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -24,35 +24,31 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+        val linkToReg = binding.linkToRegistration
         val userLogin = binding.userLogin
         val userPassword = binding.userPassword
-        val userEmail = binding.userEmail
-        val buttonRegister = binding.buttonReg
-        val linkToAuth = binding.linkToAuth
+        val buttonLogin = binding.buttonLogin
 
-        buttonRegister.setOnClickListener {
+        buttonLogin.setOnClickListener {
             val login = userLogin.text.toString().trim()
             val password = userPassword.text.toString().trim()
-            val email = userEmail.text.toString().trim()
-
             val authManager = AuthManager(this)
-            val errorMessage = authManager.registerUser(login, password, email)
 
-            if (errorMessage == null) {
-                Toast.makeText(this, "Пользователь $login успешно зарегистрирован", Toast.LENGTH_LONG).show()
+            if (authManager.loginUser(login, password)) {
+                Toast.makeText(this, "Авторизация успешна", Toast.LENGTH_SHORT).show()
+
+                val intent = Intent(this, ItemsActivity::class.java)
+                startActivity(intent)
+
                 userLogin.text.clear()
                 userPassword.text.clear()
-                userEmail.text.clear()
-            } else {
-                Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
-            }
+            } else
+                Toast.makeText(this, "Неверный логин или пароль", Toast.LENGTH_LONG).show()
         }
 
-        linkToAuth.setOnClickListener {
-            val intent = Intent(this, AuthActivity::class.java)
+        linkToReg.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
     }
-
-
 }

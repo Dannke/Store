@@ -1,4 +1,4 @@
-package com.example.site
+package com.example.store
 
 object ValidationUtils {
     fun isValidEmail(email: String): Boolean {

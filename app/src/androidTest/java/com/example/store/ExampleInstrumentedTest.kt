@@ -1,4 +1,4 @@
-package com.example.site
+package com.example.store
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

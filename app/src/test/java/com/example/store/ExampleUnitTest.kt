@@ -1,4 +1,4 @@
-package com.example.site
+package com.example.store
 
 import org.junit.Test
 

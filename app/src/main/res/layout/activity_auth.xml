@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#D4C7F0"
+    android:background="#fefae0"
     android:orientation="vertical"
     tools:context=".AuthActivity">
 
@@ -47,6 +47,8 @@
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
         android:text="Войти"
+        android:backgroundTint="#d4a373"
+
         android:textSize="16sp"
         android:textStyle="bold" />
 
