@@ -26,9 +26,9 @@ class ItemsActivity : AppCompatActivity() {
         val itemsList = binding.itemsList
         val items = arrayListOf<Item>()
 
-        items.add(Item(1, "Sofa", "Диван", "Красивый Диван", 30000))
-        items.add(Item(2, "Desk", "Стол", "Красивый Стол", 15000))
-        items.add(Item(3, "Chair", "Стул", "Красивый Стул", 10000))
+        items.add(Item(1, "sofa", "Диван", "Красивый Диван", 30000))
+        items.add(Item(2, "desk", "Стол", "Красивый Стол", 15000))
+        items.add(Item(3, "chair", "Стул", "Красивый Стул", 10000))
 
         itemsList.layoutManager = LinearLayoutManager(this)
         itemsList.adapter = ItemsAdapter(items,this)

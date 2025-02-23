@@ -1,5 +1,6 @@
 package com.example.store
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -18,10 +19,17 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+        // Проверка, авторизован ли пользователь
+        val sharedPreferences = getSharedPreferences("user_pref", Context.MODE_PRIVATE)
+        val isLoggedIn = sharedPreferences.getBoolean("is_logged_in", false)
+        val userToken = sharedPreferences.getString("user_token", null)
+
+        if (isLoggedIn && userToken != null) {
+            // Пользователь авторизован
+            val intent = Intent(this, ItemsActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+            finish()
         }
 
         val userLogin = binding.userLogin
@@ -39,7 +47,11 @@ class MainActivity : AppCompatActivity() {
             val errorMessage = authManager.registerUser(login, password, email)
 
             if (errorMessage == null) {
-                Toast.makeText(this, "Пользователь $login успешно зарегистрирован", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    this,
+                    "Пользователь $login успешно зарегистрирован",
+                    Toast.LENGTH_LONG
+                ).show()
 
                 val intent = Intent(this, AuthActivity::class.java)
                 startActivity(intent)
@@ -54,6 +66,7 @@ class MainActivity : AppCompatActivity() {
 
         linkToAuth.setOnClickListener {
             val intent = Intent(this, AuthActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent)
         }
     }

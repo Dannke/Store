@@ -15,7 +15,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="150dp"
         android:fontFamily="@font/inter_bold"
-        android:text="Добро пожаловать!"
+        android:text="Авторизация"
         android:textAlignment="center"
         android:textSize="25sp"
         android:textStyle="bold" />

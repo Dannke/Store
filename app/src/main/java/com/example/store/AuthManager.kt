@@ -1,6 +1,7 @@
 package com.example.store
 
 import android.content.Context
+import java.util.UUID
 
 class AuthManager(private val context: Context) {
     private val dbHelper = DataBaseHelper(context, null)
@@ -33,5 +34,9 @@ class AuthManager(private val context: Context) {
 
     fun loginUser(login: String, password: String): Boolean {
         return dbHelper.getUser(login, password)
+    }
+
+    fun generateUserToken(): String {
+        return UUID.randomUUID().toString()
     }
 }

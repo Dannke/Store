@@ -37,7 +37,18 @@ class AuthActivity : AppCompatActivity() {
             if (authManager.loginUser(login, password)) {
                 Toast.makeText(this, "Авторизация успешна", Toast.LENGTH_SHORT).show()
 
+                //Сохраняем данные пользователя
+                val sharedPreferences = getSharedPreferences("user_pref", MODE_PRIVATE)
+                val editor = sharedPreferences.edit()
+                val token = authManager.generateUserToken()
+
+                editor.putString("user_token", token)
+                editor.putBoolean("is_logged_in", true)
+                editor.apply()
+
                 val intent = Intent(this, ItemsActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+
                 startActivity(intent)
 
                 userLogin.text.clear()
@@ -48,6 +59,7 @@ class AuthActivity : AppCompatActivity() {
 
         linkToReg.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent)
         }
     }
