@@ -1,9 +1,10 @@
-package com.example.store
+package com.example.store.dataBase
 
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import com.example.store.data.User
 
 class DataBaseHelper(private val context: Context, private val factory: SQLiteDatabase.CursorFactory?) :
     SQLiteOpenHelper(context, "StoreDataBase", factory, 1) {
@@ -39,5 +40,22 @@ class DataBaseHelper(private val context: Context, private val factory: SQLiteDa
         db.close()
 
         return userExists
+    }
+
+    fun getUserByLogin(login: String): User? {
+        val db = this.readableDatabase
+        val cursor = db.rawQuery("SELECT login, email FROM users WHERE login = ?", arrayOf(login))
+        return if (cursor.moveToFirst()) {
+            val user = User(
+                cursor.getString(0), // login
+                null.toString(), // password не возвращаем
+                cursor.getString(1)  // email
+            )
+            cursor.close()
+            user
+        } else {
+            cursor.close()
+            null
+        }
     }
 }

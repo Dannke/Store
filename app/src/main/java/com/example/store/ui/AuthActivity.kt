@@ -1,4 +1,4 @@
-package com.example.store
+package com.example.store.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,6 +7,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.store.auth.AuthManager
+import com.example.store.R
 import com.example.store.databinding.ActivityAuthBinding
 
 class AuthActivity : AppCompatActivity() {
@@ -17,12 +19,6 @@ class AuthActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityAuthBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
 
         val linkToReg = binding.linkToRegistration
         val userLogin = binding.userLogin
@@ -44,11 +40,12 @@ class AuthActivity : AppCompatActivity() {
 
                 editor.putString("user_token", token)
                 editor.putBoolean("is_logged_in", true)
+                editor.putString("login", login)
                 editor.apply()
+
 
                 val intent = Intent(this, ItemsActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-
                 startActivity(intent)
 
                 userLogin.text.clear()

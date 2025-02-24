@@ -1,4 +1,4 @@
-package com.example.store
+package com.example.store.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -10,6 +10,9 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.store.R
+import com.example.store.data.Item
+import com.example.store.ui.ItemActivity
 
 class ItemsAdapter(var items: List<Item>, var context: Context) :
     RecyclerView.Adapter<ItemsAdapter.MyViewHolder>() {
@@ -35,7 +38,7 @@ class ItemsAdapter(var items: List<Item>, var context: Context) :
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.title.text = items[position].title
         holder.desc.text = items[position].desc
-        holder.price.text = items[position].price.toString()
+        holder.price.text = items[position].price.toString() + " ₽"
 
         val imageId = context.resources.getIdentifier(
             items[position].image,

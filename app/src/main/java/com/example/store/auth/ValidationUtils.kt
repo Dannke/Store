@@ -1,4 +1,4 @@
-package com.example.store
+package com.example.store.auth
 
 object ValidationUtils {
     fun isValidEmail(email: String): Boolean {

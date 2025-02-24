@@ -1,6 +1,8 @@
-package com.example.store
+package com.example.store.auth
 
 import android.content.Context
+import com.example.store.data.User
+import com.example.store.dataBase.DataBaseHelper
 import java.util.UUID
 
 class AuthManager(private val context: Context) {
@@ -25,9 +27,10 @@ class AuthManager(private val context: Context) {
             }
 
             else -> {
+                // Успешная регистрация + юзер в БД
                 val user = User(login, password, email)
                 dbHelper.addUser(user)
-                null // Успешная регистрация
+                null
             }
         }
     }
