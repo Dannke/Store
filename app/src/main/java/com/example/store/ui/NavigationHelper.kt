@@ -15,7 +15,7 @@ class NavigationHelper(
     private val activity: AppCompatActivity,
     private val drawerLayout: DrawerLayout,
     private val toolbar: Toolbar,
-    private val navigationView: NavigationView
+    private val navigationView: NavigationView,
 ) {
 
     fun setupNavigationView() {
@@ -34,16 +34,23 @@ class NavigationHelper(
         navigationView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.nav_items -> {
-                    val intent = Intent(context,ItemsActivity::class.java)
-                    context.startActivity(intent)
+                    if (activity !is ItemsActivity) {
+                        val intent = Intent(context, ItemsActivity::class.java)
+                        context.startActivity(intent)
+                    }
                 }
+
                 R.id.nav_profile -> {
-                    val intent = Intent(context, ProfileActivity::class.java)
-                    context.startActivity(intent)
+                    if (activity !is ProfileActivity) {
+                        val intent = Intent(context, ProfileActivity::class.java)
+                        context.startActivity(intent)
+                    }
                 }
+
                 R.id.nav_orders -> {
                     // Переход на экран заказов
                 }
+
                 R.id.nav_logout -> {
                     logoutUser()
                 }

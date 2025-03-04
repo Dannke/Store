@@ -102,7 +102,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="80dp"
             android:backgroundTint="#d4a373"
-            android:text="Выйти"
+            android:text="Выйти из аккаунта"
             android:textColor="@android:color/white" />
     </LinearLayout>
 
