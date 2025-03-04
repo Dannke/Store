@@ -26,7 +26,7 @@
             android:elevation="4dp"
             android:paddingStart="20dp"
             android:paddingTop="40dp"
-            app:title="Товары" />
+            app:title="@string/toolbar_title" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/items_list"

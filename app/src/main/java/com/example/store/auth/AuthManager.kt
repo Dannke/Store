@@ -1,12 +1,19 @@
 package com.example.store.auth
 
 import android.content.Context
+import androidx.core.app.NotificationCompat.MessagingStyle.Message
 import com.example.store.data.User
 import com.example.store.dataBase.DataBaseHelper
+import java.security.MessageDigest
 import java.util.UUID
 
 class AuthManager(private val context: Context) {
     private val dbHelper = DataBaseHelper(context, null)
+
+    fun hashPassword(password: String): String {
+        val bytes = MessageDigest.getInstance("SHA-256").digest(password.toByteArray())
+        return bytes.joinToString() { "%02x".format(it) }
+    }
 
     fun registerUser(login: String, password: String, email: String): String? {
         return when {
@@ -28,7 +35,8 @@ class AuthManager(private val context: Context) {
 
             else -> {
                 // Успешная регистрация + юзер в БД
-                val user = User(login, password, email)
+                val hashedPassword = hashPassword(password)
+                val user = User(login, hashedPassword, email)
                 dbHelper.addUser(user)
                 null
             }
@@ -36,7 +44,12 @@ class AuthManager(private val context: Context) {
     }
 
     fun loginUser(login: String, password: String): Boolean {
-        return dbHelper.getUser(login, password)
+        val hashedPassword = hashPassword(password)
+        return dbHelper.getUser(login, hashedPassword)
+    }
+
+    fun getUserEmail(login: String): String? {
+        return dbHelper.getUserEmailByLogin(login)
     }
 
     fun generateUserToken(): String {

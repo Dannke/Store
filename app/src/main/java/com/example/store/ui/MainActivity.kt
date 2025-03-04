@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.example.store.auth.AuthManager
+import com.example.store.dataBase.DataBaseHelper
 import com.example.store.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {

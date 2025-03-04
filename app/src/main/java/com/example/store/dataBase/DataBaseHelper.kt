@@ -30,32 +30,39 @@ class DataBaseHelper(private val context: Context, private val factory: SQLiteDa
 
         db.close()
     }
+    fun clearUserTable() {
+        val db = this.writableDatabase
+        db.execSQL("DELETE FROM users")
+    }
 
-    fun getUser(login: String, password: String): Boolean {
+    fun getUser(login: String, hashedPassword: String): Boolean {
         val db = this.readableDatabase
-        val result = db.rawQuery("SELECT * FROM users WHERE login = '$login' AND password = '$password'", null)
-
-        val userExists = result.moveToFirst()
-        result.close()
-        db.close()
-
+        val cursor = db.rawQuery("SELECT * FROM users WHERE login = ? AND password = ?", arrayOf(login, hashedPassword))
+        val userExists = cursor.count > 0
+        cursor.close()
         return userExists
     }
 
-    fun getUserByLogin(login: String): User? {
+    fun getUserEmailByLogin(login: String): String? {
         val db = this.readableDatabase
-        val cursor = db.rawQuery("SELECT login, email FROM users WHERE login = ?", arrayOf(login))
+        val cursor = db.rawQuery("SELECT email FROM users WHERE login = ?", arrayOf(login))
         return if (cursor.moveToFirst()) {
-            val user = User(
-                cursor.getString(0), // login
-                null.toString(), // password не возвращаем
-                cursor.getString(1)  // email
-            )
+            val email = cursor.getString(0)
             cursor.close()
-            user
+            email
         } else {
             cursor.close()
             null
         }
+    }
+
+    fun updateUserEmail(login: String, newEmail: String) {
+        val db = this.writableDatabase
+        db.execSQL("UPDATE users SET email = ? WHERE login = ?", arrayOf(newEmail, login))
+    }
+
+    fun updateUserPassword(login: String, newPassword: String) {
+        val db = this.writableDatabase
+        db.execSQL("UPDATE users SET password = ? WHERE login = ?", arrayOf(newPassword, login))
     }
 }

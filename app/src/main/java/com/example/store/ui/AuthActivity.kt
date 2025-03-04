@@ -10,6 +10,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.store.auth.AuthManager
 import com.example.store.R
 import com.example.store.databinding.ActivityAuthBinding
+import kotlin.math.log
 
 class AuthActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAuthBinding
@@ -37,10 +38,12 @@ class AuthActivity : AppCompatActivity() {
                 val sharedPreferences = getSharedPreferences("user_pref", MODE_PRIVATE)
                 val editor = sharedPreferences.edit()
                 val token = authManager.generateUserToken()
+                val email = authManager.getUserEmail(login)
 
                 editor.putString("user_token", token)
                 editor.putBoolean("is_logged_in", true)
                 editor.putString("login", login)
+                editor.putString("email", email)
                 editor.apply()
 
 

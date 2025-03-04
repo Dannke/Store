@@ -17,6 +17,15 @@ class ItemActivity : AppCompatActivity() {
         binding = ActivityItemBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val navigationHelper = NavigationHelper(
+            this,
+            this,
+            binding.drawerLayout,
+            binding.toolbar,
+            binding.navigationView
+        )
+        navigationHelper.setupNavigationView()
+
         val title = binding.itemListTitle
         val desc = binding.itemListDesc
         val buttonBuy = binding.itemListButtonBuy
