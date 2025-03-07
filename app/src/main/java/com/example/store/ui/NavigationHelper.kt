@@ -36,6 +36,7 @@ class NavigationHelper(
                 R.id.nav_items -> {
                     if (activity !is ItemsActivity) {
                         val intent = Intent(context, ItemsActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                         context.startActivity(intent)
                     }
                 }
@@ -43,6 +44,7 @@ class NavigationHelper(
                 R.id.nav_profile -> {
                     if (activity !is ProfileActivity) {
                         val intent = Intent(context, ProfileActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                         context.startActivity(intent)
                     }
                 }

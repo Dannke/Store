@@ -2,7 +2,7 @@ package com.example.store.auth
 
 object ValidationUtils {
     fun isValidEmail(email: String): Boolean {
-        val regex = Regex("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\$")
+        val regex = Regex("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}\$")
         return regex.matches(email)
     }
 

@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.example.store.databinding.ActivityItemBinding
+import com.google.android.material.snackbar.Snackbar
 
 
 class ItemActivity : AppCompatActivity() {
@@ -34,7 +35,7 @@ class ItemActivity : AppCompatActivity() {
         desc.text = intent.getStringExtra("itemText")
 
         buttonBuy.setOnClickListener {
-            Toast.makeText(this, "Товар куплен!", Toast.LENGTH_LONG).show()
+            Snackbar.make(binding.root, "Товар куплен!", Snackbar.LENGTH_SHORT).show()
         }
     }
 }
