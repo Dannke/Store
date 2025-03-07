@@ -54,15 +54,32 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/editTextEmail"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginBottom="16dp"
+            android:layout_height="wrap_content"
             android:layout_marginHorizontal="30dp"
-            android:hint="Новая почта"
-            android:inputType="textEmailAddress"
-            android:textSize="16sp" />
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+
+            <EditText
+                android:id="@+id/editTextEmail"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:hint="Новая почта"
+                android:inputType="textEmailAddress"
+                android:textSize="16sp"
+                android:enabled="false" /> <!-- По умолчанию поле недоступно для редактирования -->
+
+            <Button
+                android:id="@+id/buttonEditEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Редактировать"
+                android:backgroundTint="#d4a373"
+                android:textColor="@android:color/white"
+                android:layout_marginStart="10dp" />
+        </LinearLayout>
 
         <!-- Пароль -->
         <TextView
@@ -79,9 +96,19 @@
             android:id="@+id/editTextPassword"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:layout_marginBottom="40dp"
+            android:layout_marginBottom="20dp"
             android:layout_marginHorizontal="30dp"
             android:hint="Новый пароль"
+            android:inputType="textPassword"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/editTextPasswordRepeat"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginBottom="40dp"
+            android:layout_marginHorizontal="30dp"
+            android:hint="Повторите пароль"
             android:inputType="textPassword"
             android:textSize="16sp" />
 

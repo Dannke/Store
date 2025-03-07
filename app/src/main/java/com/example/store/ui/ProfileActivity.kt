@@ -3,6 +3,7 @@ package com.example.store.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
@@ -21,6 +22,10 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var textViewLogin: TextView
     private lateinit var editTextEmail: EditText
     private lateinit var editTextPassword: EditText
+    private lateinit var editTextPasswordRepeat: EditText
+    private lateinit var buttonEditEmail: Button
+    private lateinit var buttonSave: Button
+    private lateinit var buttonLogout: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,15 +33,20 @@ class ProfileActivity : AppCompatActivity() {
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Инициализация элементов
         textViewLogin = binding.textViewLogin
         editTextEmail = binding.editTextEmail
         editTextPassword = binding.editTextPassword
-        val buttonSave = binding.buttonSave
-        val buttonLogout = binding.buttonLogout
+        editTextPasswordRepeat = binding.editTextPasswordRepeat
+        buttonEditEmail = binding.buttonEditEmail
+        buttonSave = binding.buttonSave
+        buttonLogout = binding.buttonLogout
 
+        // Инициализация AuthManager и DataBaseHelper
         authManager = AuthManager(this)
         dbHelper = DataBaseHelper(this, null)
 
+        // Настройка NavigationView
         val navigationHelper = NavigationHelper(
             this,
             this,
@@ -48,6 +58,11 @@ class ProfileActivity : AppCompatActivity() {
 
         // Загрузка данных пользователя
         loadUserData()
+
+        // Обработка нажатия на кнопку "Редактировать"
+        buttonEditEmail.setOnClickListener {
+            editTextEmail.isEnabled = true // Включаем редактирование почты
+        }
 
         // Обработка нажатия на кнопку "Сохранить"
         buttonSave.setOnClickListener {
@@ -75,9 +90,11 @@ class ProfileActivity : AppCompatActivity() {
 
         val newEmail = editTextEmail.text.toString().trim()
         val newPassword = editTextPassword.text.toString().trim()
+        val newPasswordRepeat = editTextPasswordRepeat.text.toString().trim()
 
-        if (newEmail.isEmpty()) {
-            Toast.makeText(this, "Почта не может быть пустой", Toast.LENGTH_SHORT).show()
+        // Проверка совпадения паролей
+        if (newPassword != newPasswordRepeat) {
+            Toast.makeText(this, "Пароли не совпадают", Toast.LENGTH_SHORT).show()
             return
         }
 
