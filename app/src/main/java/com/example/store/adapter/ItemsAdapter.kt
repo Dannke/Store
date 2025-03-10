@@ -36,16 +36,13 @@ class ItemsAdapter(var items: List<Item>, var context: Context) :
 
     @SuppressLint("DiscouragedApi")
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        val item = items[position]
+
         holder.title.text = items[position].title
         holder.desc.text = items[position].desc
         holder.price.text = items[position].price.toString() + " ₽"
 
-        val imageId = context.resources.getIdentifier(
-            items[position].image,
-            "drawable",
-            context.packageName
-        )
-        holder.image.setImageResource(imageId)
+        holder.image.setImageResource(item.images[0])
 
         holder.btn.setOnClickListener {
             val intent = Intent(context, ItemActivity::class.java)
@@ -54,8 +51,7 @@ class ItemsAdapter(var items: List<Item>, var context: Context) :
             intent.putExtra("itemCategory", items[position].category)
             intent.putExtra("itemCount", items[position].count)
             intent.putExtra("itemPrice", items[position].price)
-            intent.putExtra("itemImage", items[position].image)
-            intent.putIntegerArrayListExtra("itemImages", ArrayList(items[position].images))
+            intent.putIntegerArrayListExtra("itemImages", ArrayList(item.images))
 
             context.startActivity(intent)
         }
