@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.example.store.R
 import com.example.store.adapter.ImagePagerAdapter
@@ -44,13 +45,12 @@ class ItemActivity : AppCompatActivity() {
         binding.itemListCount.text = "Количество: $count"
         binding.itemListPrice.text = "$price ₽"
 
-        // Загружаем изображения
-        val images = listOf(
-            R.drawable.nike_court,
-            R.drawable.nike_court1,
-            R.drawable.nike_court2
+// Получаем список изображений из Intent
+        val images = intent.getIntegerArrayListExtra("itemImages") ?: listOf(
+            R.drawable.sofa // Запасное изображение, если список пуст
         )
 
+// Передаём список изображений в адаптер
         val adapter = ImagePagerAdapter(images)
         binding.viewPager.adapter = adapter
 
@@ -67,6 +67,7 @@ class ItemActivity : AppCompatActivity() {
                         // Переход на последний элемент
                         binding.viewPager.setCurrentItem(adapter.itemCount - 2, false)
                     }
+
                     adapter.itemCount - 1 -> {
                         // Переход на первый элемент
                         binding.viewPager.setCurrentItem(1, false)
@@ -74,6 +75,18 @@ class ItemActivity : AppCompatActivity() {
                 }
             }
         })
+
+        // Проверка количества товара
+        if (count == 0) {
+            binding.itemListButtonBuy.isEnabled = false
+            binding.itemListButtonBuy.alpha = 0.5f
+            binding.itemListButtonBuy.text = "Нет в наличии"
+            binding.itemListButtonBuy.setTextColor(ContextCompat.getColor(this, R.color.black))
+        } else {
+            binding.itemListButtonBuy.isEnabled = true
+            binding.itemListButtonBuy.alpha = 1f
+            binding.itemListButtonBuy.text = "Купить"
+        }
 
         // Обработка нажатия на кнопку "Купить"
         binding.itemListButtonBuy.setOnClickListener {

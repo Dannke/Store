@@ -31,9 +31,8 @@ class ItemsActivity : AppCompatActivity() {
 
         // Настройка списка товаров
         val itemsList = binding.itemsList
-        val items = arrayListOf<Item>()
 
-        items.add(
+        val items = listOf(
             Item(
                 1,
                 "nike_court",
@@ -41,11 +40,28 @@ class ItemsActivity : AppCompatActivity() {
                 "Кеды Nike Court Vision Low Next Nature. Стильные, удобные, красивые",
                 "Nike",
                 15000,
-                100
+                100,
+                images = listOf(
+                    R.drawable.nike_court,
+                    R.drawable.nike_court1,
+                    R.drawable.nike_court2
+                )
+            ),
+            Item(
+                1,
+                "air_force",
+                "AIR FORCE 1 '07 NN",
+                "Кеды AIR FORCE 1 '07 NN. Удобные и красивые кроссовки.",
+                "Nike",
+                20000,
+                0,
+                images = listOf(
+                    R.drawable.air_force,
+                    R.drawable.air_force_1_07_2,
+                    R.drawable.air_force_1_07_3
+                )
             )
         )
-        items.add(Item(2, "desk", "Стол", "Красивый Стол", "Мебель", 15000, 50))
-        items.add(Item(3, "chair", "Стул", "Красивый Стул", "Мебель", 10000, 70))
 
         itemsList.layoutManager = LinearLayoutManager(this)
         itemsList.adapter = ItemsAdapter(items, this)
