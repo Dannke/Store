@@ -33,9 +33,19 @@ class ItemsActivity : AppCompatActivity() {
         val itemsList = binding.itemsList
         val items = arrayListOf<Item>()
 
-        items.add(Item(1, "sofa", "Диван", "Красивый Диван", 30000))
-        items.add(Item(2, "desk", "Стол", "Красивый Стол", 15000))
-        items.add(Item(3, "chair", "Стул", "Красивый Стул", 10000))
+        items.add(
+            Item(
+                1,
+                "nike_court",
+                "Nike Court Vision Low Next Nature",
+                "Кеды Nike Court Vision Low Next Nature. Стильные, удобные, красивые",
+                "Nike",
+                15000,
+                100
+            )
+        )
+        items.add(Item(2, "desk", "Стол", "Красивый Стол", "Мебель", 15000, 50))
+        items.add(Item(3, "chair", "Стул", "Красивый Стул", "Мебель", 10000, 70))
 
         itemsList.layoutManager = LinearLayoutManager(this)
         itemsList.adapter = ItemsAdapter(items, this)

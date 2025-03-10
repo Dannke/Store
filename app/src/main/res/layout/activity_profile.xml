@@ -10,14 +10,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#faedcd"
+        android:background="@color/background_color"
         android:orientation="vertical">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#ccd5ae"
+            android:background="@color/navigationBar_color"
             android:elevation="4dp"
             android:paddingStart="20dp"
             android:paddingTop="40dp"
@@ -77,77 +77,84 @@
                 android:enabled="false"
                 android:inputType="textEmailAddress"
                 android:textSize="16sp"
-                tools:ignore="SpeakableTextPresentCheck" /> <!-- По умолчанию поле недоступно для редактирования -->
+                tools:ignore="SpeakableTextPresentCheck" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Пароль -->
-
-        <Button
-            android:id="@+id/buttonEditEmail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginBottom="30dp"
-            android:backgroundTint="#d4a373"
-            android:text="Редактировать"
-            android:textColor="@android:color/white" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/passwordInputLayout"
+        <!-- Поля для изменения пароля (изначально скрыты) -->
+        <LinearLayout
+            android:id="@+id/passwordFieldsContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="30dp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/passwordInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:errorEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Новый пароль"
+                    android:inputType="textPassword"
+                    android:textSize="16sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/passwordRepeatInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:errorEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextPasswordRepeat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Повторите пароль"
+                    android:inputType="textPassword"
+                    android:textSize="16sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <!-- Кнопки "Редактировать" и "Сохранить" -->
+        <LinearLayout
+            android:id="@+id/buttonsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
-            app:errorEnabled="true">
+            android:orientation="horizontal"
+            android:weightSum="2">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editTextPassword"
-                android:layout_width="match_parent"
+            <Button
+                android:id="@+id/buttonEdit"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:hint="Новый пароль"
-                android:inputType="textPassword"
-                android:textSize="16sp" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:backgroundTint="@color/button_color"
+                android:text="Редактировать"
+                android:textColor="@android:color/white" />
 
-        <!-- Повторите пароль -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/passwordRepeatInputLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="30dp"
-            android:layout_marginBottom="40dp"
-            app:errorEnabled="true">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editTextPasswordRepeat"
-                android:layout_width="match_parent"
+            <Button
+                android:id="@+id/buttonSave"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:hint="Повторите пароль"
-                android:inputType="textPassword"
-                android:textSize="16sp" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Кнопка "Сохранить" -->
-        <Button
-            android:id="@+id/buttonSave"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="25dp"
-            android:layout_marginHorizontal="80dp"
-            android:backgroundTint="#d4a373"
-            android:text="Сохранить"
-            android:textColor="@android:color/white" />
-
-        <!-- Кнопка "Выйти" -->
-        <Button
-            android:id="@+id/buttonLogout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="80dp"
-            android:backgroundTint="#d4a373"
-            android:text="Выйти из аккаунта"
-            android:textColor="@android:color/white"
-            tools:ignore="TouchTargetSizeCheck" />
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:backgroundTint="@color/button_color"
+                android:text="Сохранить"
+                android:textColor="@android:color/white"
+                android:enabled="false"
+                android:alpha="0.5" />
+        </LinearLayout>
     </LinearLayout>
 
     <com.google.android.material.navigation.NavigationView

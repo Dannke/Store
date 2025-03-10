@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FEFAE0"
+    android:background="@color/background_color"
     android:orientation="vertical"
     tools:context=".ui.RegisterActivity">
 
@@ -81,7 +81,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
         android:text="Регистрация"
-        android:backgroundTint="#d4a373"
+        android:backgroundTint="@color/button_color"
         android:textSize="16sp"
         android:textStyle="bold"
         android:animation="@anim/slide_up"/>

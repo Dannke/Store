@@ -17,12 +17,12 @@ import com.example.store.ui.ItemActivity
 class ItemsAdapter(var items: List<Item>, var context: Context) :
     RecyclerView.Adapter<ItemsAdapter.MyViewHolder>() {
 
-        class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-            val image: ImageView = view.findViewById(R.id.item_list_image)
-            val title: TextView = view.findViewById(R.id.item_list_title)
-            val desc: TextView = view.findViewById(R.id.item_list_desc)
-            val price: TextView = view.findViewById(R.id.item_list_price)
-            val btn: Button = view.findViewById(R.id.item_list_button)
+    class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val image: ImageView = view.findViewById(R.id.item_list_image)
+        val title: TextView = view.findViewById(R.id.item_list_title)
+        val desc: TextView = view.findViewById(R.id.item_list_desc)
+        val price: TextView = view.findViewById(R.id.item_list_price)
+        val btn: Button = view.findViewById(R.id.item_list_button)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -50,7 +50,11 @@ class ItemsAdapter(var items: List<Item>, var context: Context) :
         holder.btn.setOnClickListener {
             val intent = Intent(context, ItemActivity::class.java)
             intent.putExtra("itemTitle", items[position].title)
-            intent.putExtra("itemText", items[position].desc)
+            intent.putExtra("itemDesc", items[position].desc)
+            intent.putExtra("itemCategory", items[position].category)
+            intent.putExtra("itemCount", items[position].count)
+            intent.putExtra("itemPrice", items[position].price)
+            intent.putExtra("itemImage", items[position].image)
 
             context.startActivity(intent)
         }

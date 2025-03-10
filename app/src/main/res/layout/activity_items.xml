@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="#fefae0">
+        android:background="@color/background_color">
 
         <!-- Toolbar -->
 
@@ -22,7 +22,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#ccd5ae"
+            android:background="@color/navigationBar_color"
             android:elevation="4dp"
             android:paddingStart="20dp"
             android:paddingTop="40dp"

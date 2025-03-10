@@ -1,10 +1,10 @@
 package com.example.store.ui
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.EditText
@@ -23,14 +23,12 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProfileBinding
     private lateinit var authManager: AuthManager
     private lateinit var dbHelper: DataBaseHelper
-
     private lateinit var textViewLogin: TextView
     private lateinit var editTextEmail: EditText
     private lateinit var editTextPassword: EditText
     private lateinit var editTextPasswordRepeat: EditText
-    private lateinit var buttonEditEmail: Button
+    private lateinit var buttonEdit: Button
     private lateinit var buttonSave: Button
-    private lateinit var buttonLogout: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,13 +41,13 @@ class ProfileActivity : AppCompatActivity() {
         editTextEmail = binding.editTextEmail
         editTextPassword = binding.editTextPassword
         editTextPasswordRepeat = binding.editTextPasswordRepeat
-        buttonEditEmail = binding.buttonEditEmail
+        buttonEdit = binding.buttonEdit
         buttonSave = binding.buttonSave
-        buttonLogout = binding.buttonLogout
 
         val emailInputLayout = binding.emailInputLayout
         val passwordInputLayout = binding.passwordInputLayout
         val passwordRepeatInputLayout = binding.passwordRepeatInputLayout
+        val passwordFieldsContainer = binding.passwordFieldsContainer
 
         // Инициализация AuthManager и DataBaseHelper
         authManager = AuthManager(this)
@@ -73,36 +71,45 @@ class ProfileActivity : AppCompatActivity() {
         val slideUp = AnimationUtils.loadAnimation(this, R.anim.slide_up)
         textViewLogin.startAnimation(fadeIn)
         editTextEmail.startAnimation(slideUp)
-        editTextPassword.startAnimation(slideUp)
-        editTextPasswordRepeat.startAnimation(slideUp)
-        buttonEditEmail.startAnimation(fadeIn)
+        buttonEdit.startAnimation(fadeIn)
         buttonSave.startAnimation(fadeIn)
-        buttonLogout.startAnimation(fadeIn)
 
         // Обработка нажатия на кнопку "Редактировать"
-        buttonEditEmail.setOnClickListener {
-            if (editTextEmail.isEnabled) {
-                editTextEmail.isEnabled = false
-                buttonEditEmail.text = "Редактировать"
-                loadUserData() // Восстанавливаем исходное значение почты
-            }
-            else {
+        buttonEdit.setOnClickListener {
+            if (buttonEdit.text == "Редактировать") {
+                // Включение режима редактирования
                 editTextEmail.isEnabled = true
-                buttonEditEmail.text = "Отмена"
+                buttonEdit.text = "Отменить"
+                buttonSave.isEnabled = false
+                buttonSave.alpha = 0.5f
+                passwordFieldsContainer.visibility = View.VISIBLE
+            } else {
+                // Отмена редактирования
+                editTextEmail.isEnabled = false
+                buttonEdit.text = "Редактировать"
+                buttonSave.isEnabled = false
+                buttonSave.alpha = 0.5f
+                passwordFieldsContainer.visibility = View.GONE
+                loadUserData() // Восстанавливаем исходные данные
             }
         }
 
         // Обработка нажатия на кнопку "Сохранить"
         buttonSave.setOnClickListener {
-            saveUserData()
-            editTextEmail.isEnabled = false
-            buttonEditEmail.text = "Редактировать"
+            if (saveUserData()) {
+                // Успешное сохранение
+                editTextEmail.isEnabled = false
+                buttonEdit.text = "Редактировать"
+                buttonSave.isEnabled = false
+                buttonSave.alpha = 0.5f
+                passwordFieldsContainer.visibility = View.GONE
+            }
         }
 
-        // Обработка нажатия на кнопку "Выйти"
-        buttonLogout.setOnClickListener {
-            logoutUser()
-        }
+        // Слушатели изменений в полях
+        editTextEmail.addTextChangedListener(createTextWatcher { checkChanges() })
+        editTextPassword.addTextChangedListener(createTextWatcher { checkChanges() })
+        editTextPasswordRepeat.addTextChangedListener(createTextWatcher { checkChanges() })
 
         // Очистка ошибок при вводе
         editTextEmail.addTextChangedListener(createTextWatcher { emailInputLayout.error = null })
@@ -117,11 +124,13 @@ class ProfileActivity : AppCompatActivity() {
 
         textViewLogin.text = login
         editTextEmail.setText(email)
+        editTextPassword.text?.clear()
+        editTextPasswordRepeat.text?.clear()
     }
 
-    private fun saveUserData() {
+    private fun saveUserData(): Boolean {
         val sharedPreferences = getSharedPreferences("user_pref", Context.MODE_PRIVATE)
-        val login = sharedPreferences.getString("login", "") ?: return
+        val login = sharedPreferences.getString("login", "") ?: return false
 
         val newEmail = editTextEmail.text.toString().trim()
         val newPassword = editTextPassword.text.toString().trim()
@@ -135,22 +144,22 @@ class ProfileActivity : AppCompatActivity() {
         // Валидация данных
         if (newEmail.isEmpty() && newPassword.isEmpty() && newPasswordRepeat.isEmpty()) {
             Snackbar.make(binding.root, "Нет изменений для сохранения", Snackbar.LENGTH_SHORT).show()
-            return
+            return false
         }
 
         if (newEmail.isNotEmpty() && !ValidationUtils.isValidEmail(newEmail)) {
             binding.emailInputLayout.error = "Некорректный email. Введите email в формате example@example.com."
-            return
+            return false
         }
 
         if (newPassword.isNotEmpty() && !ValidationUtils.isValidPassword(newPassword)) {
             binding.passwordInputLayout.error = "Некорректный пароль. От 3 символов, включая цифры, строчные и заглавные буквы."
-            return
+            return false
         }
 
         if (newPassword != newPasswordRepeat) {
             binding.passwordRepeatInputLayout.error = "Пароли не совпадают"
-            return
+            return false
         }
 
         // Обновляем почту
@@ -170,18 +179,20 @@ class ProfileActivity : AppCompatActivity() {
         editor.apply()
 
         Snackbar.make(binding.root, "Данные сохранены", Snackbar.LENGTH_SHORT).show()
+        return true
     }
 
-    private fun logoutUser() {
-        val sharedPreferences = getSharedPreferences("user_pref", Context.MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        editor.clear()
-        editor.apply()
+    private fun checkChanges() {
+        val newEmail = editTextEmail.text.toString().trim()
+        val newPassword = editTextPassword.text.toString().trim()
+        val newPasswordRepeat = editTextPasswordRepeat.text.toString().trim()
 
-        val intent = Intent(this, AuthActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
-        finish()
+        val isEmailChanged = newEmail != getSharedPreferences("user_pref", Context.MODE_PRIVATE)
+            .getString("email", "")
+        val isPasswordChanged = newPassword.isNotEmpty() || newPasswordRepeat.isNotEmpty()
+
+        buttonSave.isEnabled = isEmailChanged || isPasswordChanged
+        buttonSave.alpha = if (buttonSave.isEnabled) 1f else 0.5f
     }
 
     private fun createTextWatcher(onTextChanged: () -> Unit): TextWatcher {
