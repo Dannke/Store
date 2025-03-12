@@ -7,19 +7,12 @@ import android.database.sqlite.SQLiteOpenHelper
 import com.example.store.data.Item
 import com.example.store.data.User
 
-class DataBaseHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
+class DataBaseItemsHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
     SQLiteOpenHelper(context, DATABASE_NAME, factory, DATABASE_VERSION) {
 
     companion object {
         private const val DATABASE_NAME = "store.db"
         private const val DATABASE_VERSION = 1
-
-        // Таблица пользователей
-        private const val TABLE_USERS = "users"
-        private const val COLUMN_USER_ID = "id"
-        private const val COLUMN_USER_LOGIN = "login"
-        private const val COLUMN_USER_PASSWORD = "password"
-        private const val COLUMN_USER_EMAIL = "email"
 
         // Таблица товаров
         private const val TABLE_ITEMS = "items"
@@ -29,18 +22,10 @@ class DataBaseHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         private const val COLUMN_ITEM_PRICE = "price"
         private const val COLUMN_ITEM_CATEGORY = "category"
         private const val COLUMN_ITEM_COUNT = "count"
-        private const val COLUMN_ITEM_IMAGES = "images" // Список изображений (можно хранить как JSON)
+        private const val COLUMN_ITEM_IMAGES = "images"
     }
 
     override fun onCreate(db: SQLiteDatabase) {
-        // Создание таблицы пользователей
-        val createUsersTable = ("CREATE TABLE $TABLE_USERS ("
-                + "$COLUMN_USER_ID INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + "$COLUMN_USER_LOGIN TEXT,"
-                + "$COLUMN_USER_PASSWORD TEXT,"
-                + "$COLUMN_USER_EMAIL TEXT)")
-        db.execSQL(createUsersTable)
-
         // Создание таблицы товаров
         val createItemsTable = ("CREATE TABLE $TABLE_ITEMS ("
                 + "$COLUMN_ITEM_ID INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -49,69 +34,22 @@ class DataBaseHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
                 + "$COLUMN_ITEM_PRICE INTEGER,"
                 + "$COLUMN_ITEM_CATEGORY TEXT,"
                 + "$COLUMN_ITEM_COUNT INTEGER,"
-                + "$COLUMN_ITEM_IMAGES TEXT)") // Список изображений (например, в формате JSON)
+                + "$COLUMN_ITEM_IMAGES TEXT)")
         db.execSQL(createItemsTable)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        db.execSQL("DROP TABLE IF EXISTS $TABLE_USERS")
         db.execSQL("DROP TABLE IF EXISTS $TABLE_ITEMS")
         onCreate(db)
     }
 
-    fun addUser(user: User) {
-        val values = ContentValues()
-        values.put("login", user.login)
-        values.put("password", user.password)
-        values.put("email", user.email)
-
-        val db = this.writableDatabase
-        db.insert("users", null, values)
-
-        db.close()
-    }
-
-    fun clearUserTable() {
-        val db = this.writableDatabase
-        db.execSQL("DELETE FROM users")
-    }
     fun clearItemsTable() {
-        val db = this.writableDatabase
-        db.execSQL("DELETE FROM items")
-    }
+        val db = this.writableDatabase.apply {
+            delete(TABLE_ITEMS, null, null)
+            execSQL("DELETE FROM SQLITE_SEQUENCE WHERE NAME = ?", arrayOf(TABLE_ITEMS))
 
-    fun getUser(login: String, hashedPassword: String): Boolean {
-        val db = this.readableDatabase
-        val cursor = db.rawQuery(
-            "SELECT * FROM users WHERE login = ? AND password = ?",
-            arrayOf(login, hashedPassword)
-        )
-        val userExists = cursor.count > 0
-        cursor.close()
-        return userExists
-    }
-
-    fun getUserEmailByLogin(login: String): String? {
-        val db = this.readableDatabase
-        val cursor = db.rawQuery("SELECT email FROM users WHERE login = ?", arrayOf(login))
-        return if (cursor.moveToFirst()) {
-            val email = cursor.getString(0)
-            cursor.close()
-            email
-        } else {
-            cursor.close()
-            null
+            close()
         }
-    }
-
-    fun updateUserEmail(login: String, newEmail: String) {
-        val db = this.writableDatabase
-        db.execSQL("UPDATE users SET email = ? WHERE login = ?", arrayOf(newEmail, login))
-    }
-
-    fun updateUserPassword(login: String, newPassword: String) {
-        val db = this.writableDatabase
-        db.execSQL("UPDATE users SET password = ? WHERE login = ?", arrayOf(newPassword, login))
     }
 
     // Добавление товара
@@ -211,5 +149,15 @@ class DataBaseHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         }.also {
             cursor.close()
         }
+    }
+
+    // Метод для установки количества товара
+    fun setItemCount(itemId: Int, newCount: Int) {
+        val db = this.writableDatabase
+        db.execSQL(
+            "UPDATE $TABLE_ITEMS SET $COLUMN_ITEM_COUNT = ? WHERE $COLUMN_ITEM_ID = ?",
+            arrayOf(newCount.toString(), itemId.toString())
+        )
+        db.close()
     }
 }

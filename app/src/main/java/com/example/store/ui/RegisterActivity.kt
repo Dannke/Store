@@ -10,16 +10,25 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.store.R
 import com.example.store.auth.AuthManager
 import com.example.store.databinding.ActivityRegisterBinding
+import com.example.store.ui.ItemsActivity
+import com.google.android.material.snackbar.Snackbar
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
 
     private fun handleRegistrationErrors(errorMessage: String?) {
+        binding.loginInputLayout.error = null
+        binding.passwordInputLayout.error = null
+        binding.emailInputLayout.error = null
+
         when (errorMessage) {
             "Не все поля заполнены" -> {
                 if (binding.userLogin.text.isNullOrEmpty()) binding.loginInputLayout.error = "Заполните поле"
                 if (binding.userPassword.text.isNullOrEmpty()) binding.passwordInputLayout.error = "Заполните поле"
                 if (binding.userEmail.text.isNullOrEmpty()) binding.emailInputLayout.error = "Заполните поле"
+            }
+            "Пользователь с таким логином уже существует" -> {
+                binding.loginInputLayout.error = errorMessage
             }
             "Некорректный логин. Логин должен содержать от 3 до 18 символов." -> {
                 binding.loginInputLayout.error = errorMessage
@@ -31,7 +40,7 @@ class RegisterActivity : AppCompatActivity() {
                 binding.emailInputLayout.error = errorMessage
             }
             else -> {
-                Toast.makeText(this, "Пользователь успешно зарегистрирован", Toast.LENGTH_LONG).show()
+                Snackbar.make(binding.root, "Пользователь успешно зарегистрирован", Snackbar.LENGTH_SHORT).show()
                 val intent = Intent(this, AuthActivity::class.java)
                 startActivity(intent)
                 finish()

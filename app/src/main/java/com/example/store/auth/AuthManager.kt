@@ -1,14 +1,13 @@
 package com.example.store.auth
 
 import android.content.Context
-import androidx.core.app.NotificationCompat.MessagingStyle.Message
 import com.example.store.data.User
-import com.example.store.dataBase.DataBaseHelper
+import com.example.store.dataBase.DataBaseUsersHelper
 import java.security.MessageDigest
 import java.util.UUID
 
 class AuthManager(private val context: Context) {
-    private val dbHelper = DataBaseHelper(context, null)
+    private val dbHelper = DataBaseUsersHelper(context, null)
 
     fun hashPassword(password: String): String {
         val bytes = MessageDigest.getInstance("SHA-256").digest(password.toByteArray())
@@ -20,7 +19,9 @@ class AuthManager(private val context: Context) {
             login.isEmpty() || password.isEmpty() || email.isEmpty() -> {
                 "Не все поля заполнены"
             }
-
+            dbHelper.isLoginExists(login) -> {
+                "Пользователь с таким логином уже существует"
+            }
             !ValidationUtils.isValidLogin(login) -> {
                 "Некорректный логин. Логин должен содержать от 3 до 18 символов."
             }

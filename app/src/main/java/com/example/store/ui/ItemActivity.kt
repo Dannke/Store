@@ -8,11 +8,17 @@ import androidx.core.content.ContextCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.example.store.R
 import com.example.store.adapter.ImagePagerAdapter
+import com.example.store.dataBase.DataBaseItemsHelper
 import com.example.store.databinding.ActivityItemBinding
 import com.google.android.material.snackbar.Snackbar
 
 class ItemActivity : AppCompatActivity() {
     private lateinit var binding: ActivityItemBinding
+    private lateinit var dbHelper: DataBaseItemsHelper
+    private var itemId: Int = -1
+    private var currentCount: Int = 0
+    private lateinit var images: List<Int> // Список изображений
+    private var currentPosition: Int = 0 // Текущая позиция ViewPager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,6 +27,29 @@ class ItemActivity : AppCompatActivity() {
         binding = ActivityItemBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        dbHelper = DataBaseItemsHelper(this, null)
+
+        itemId = intent.getIntExtra("itemId", -1)
+        if (itemId == -1) {
+            Toast.makeText(this, "Ошибка: товар не найден", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
+
+        // Установка NavigationView
+        setupNavigationView()
+
+        // Загрузка данных о товаре
+        loadItemData()
+
+        // Настройка ViewPager для изображений
+        setupViewPager()
+
+        // Настройка кнопки "Купить"
+        setupBuyButton()
+    }
+
+    private fun setupNavigationView() {
         val navigationHelper = NavigationHelper(
             this,
             this,
@@ -29,55 +58,82 @@ class ItemActivity : AppCompatActivity() {
             binding.navigationView
         )
         navigationHelper.setupNavigationView()
+    }
 
-        // Получаем данные из Intent
-        val title = intent.getStringExtra("itemTitle")
-        val desc = intent.getStringExtra("itemDesc")
-        val category = intent.getStringExtra("itemCategory")
-        val count = intent.getIntExtra("itemCount", 0)
-        val price = intent.getIntExtra("itemPrice", 0)
-        val image = intent.getStringExtra("itemImage")
+    private fun loadItemData() {
+        val item = dbHelper.getItemById(itemId)
+        if (item == null) {
+            Toast.makeText(this, "Товар не найден", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
 
-        // Устанавливаем данные в элементы интерфейса
-        binding.itemListTitle.text = title
-        binding.itemListDesc.text = "Описание: $desc"
-        binding.itemListCategory.text = "Категория: $category"
-        binding.itemListCount.text = "Количество: $count"
-        binding.itemListPrice.text = "$price ₽"
+        binding.itemListTitle.text = item.title
+        binding.itemListDesc.text = "Описание: ${item.desc}"
+        binding.itemListCategory.text = "Категория: ${item.category}"
+        binding.itemListPrice.text = "${item.price} ₽"
 
-// Получаем список изображений из Intent
-        val images = intent.getIntegerArrayListExtra("itemImages") ?: listOf(
-            R.drawable.sofa // Запасное изображение, если список пуст
-        )
+        // Обновляем текущее количество товара
+        currentCount = item.count
+        updateCountUI()
 
-// Передаём список изображений в адаптер
+        // Сохраняем список изображений
+        images = item.images.ifEmpty { listOf(R.drawable.sofa) } // Запасное изображение
+    }
+
+    private fun setupViewPager() {
         val adapter = ImagePagerAdapter(images)
         binding.viewPager.adapter = adapter
 
-        binding.viewPager.setCurrentItem(1, false)
+        if (images.size > 1) {
+            binding.viewPager.setCurrentItem(1, false) // Начинаем с первого реального элемента
+            binding.viewPager.offscreenPageLimit = 3
 
-        // Обработка перехода на реальные элементы
-        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
+            binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                private var currentPosition = 0
+                private var isScrolling = false
 
-                val adapter = binding.viewPager.adapter as ImagePagerAdapter
-                when (position) {
-                    0 -> {
-                        // Переход на последний элемент
-                        binding.viewPager.setCurrentItem(adapter.itemCount - 2, false)
-                    }
+                override fun onPageSelected(position: Int) {
+                    currentPosition = position
+                }
 
-                    adapter.itemCount - 1 -> {
-                        // Переход на первый элемент
-                        binding.viewPager.setCurrentItem(1, false)
+                override fun onPageScrollStateChanged(state: Int) {
+                    when (state) {
+                        ViewPager2.SCROLL_STATE_DRAGGING -> isScrolling = true
+                        ViewPager2.SCROLL_STATE_IDLE -> {
+                            if (isScrolling) {
+                                when (currentPosition) {
+                                    0 -> binding.viewPager.setCurrentItem(images.size, false)
+                                    adapter.itemCount - 1 -> binding.viewPager.setCurrentItem(1, false)
+                                }
+                                isScrolling = false
+                            }
+                        }
+                        ViewPager2.SCROLL_STATE_SETTLING -> {}
                     }
                 }
-            }
-        })
+            })
+        }
+    }
 
-        // Проверка количества товара
-        if (count == 0) {
+    private fun setupBuyButton() {
+        binding.itemListButtonBuy.setOnClickListener {
+            val success = dbHelper.decreaseItemCount(itemId)
+
+            if (success) {
+                currentCount -= 1
+                updateCountUI()
+                Snackbar.make(binding.root, "Товар куплен!", Snackbar.LENGTH_SHORT).show()
+            } else {
+                Snackbar.make(binding.root, "Товар закончился", Snackbar.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun updateCountUI() {
+        binding.itemListCount.text = "Количество: $currentCount"
+
+        if (currentCount == 0) {
             binding.itemListButtonBuy.isEnabled = false
             binding.itemListButtonBuy.alpha = 0.5f
             binding.itemListButtonBuy.text = "Нет в наличии"
@@ -86,11 +142,6 @@ class ItemActivity : AppCompatActivity() {
             binding.itemListButtonBuy.isEnabled = true
             binding.itemListButtonBuy.alpha = 1f
             binding.itemListButtonBuy.text = "Купить"
-        }
-
-        // Обработка нажатия на кнопку "Купить"
-        binding.itemListButtonBuy.setOnClickListener {
-            Snackbar.make(binding.root, "Товар куплен!", Snackbar.LENGTH_SHORT).show()
         }
     }
 }

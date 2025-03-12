@@ -46,6 +46,7 @@ class ItemsAdapter(var items: List<Item>, var context: Context) :
 
         holder.btn.setOnClickListener {
             val intent = Intent(context, ItemActivity::class.java)
+            intent.putExtra("itemId", item.id)
             intent.putExtra("itemTitle", items[position].title)
             intent.putExtra("itemDesc", items[position].desc)
             intent.putExtra("itemCategory", items[position].category)

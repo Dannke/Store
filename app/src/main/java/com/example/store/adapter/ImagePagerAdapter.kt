@@ -9,8 +9,18 @@ import com.example.store.R
 
 class ImagePagerAdapter(private val images: List<Int>) : RecyclerView.Adapter<ImagePagerAdapter.ImageViewHolder>() {
 
-    // Увеличиваем список изображений для бесконечного цикла
-    private val infiniteImages = listOf(images.last()) + images + listOf(images.first())
+    // Добавляем два дополнительных элемента для бесконечного скролла
+    private val infiniteImages by lazy {
+        when {
+            images.size > 1 -> {
+                val last = images.last()
+                val first = images.first()
+                listOf(last) + images + listOf(first)
+            }
+            else -> images
+        }
+    }
+
 
     class ImageViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val imageView: ImageView = view.findViewById(R.id.imageView)

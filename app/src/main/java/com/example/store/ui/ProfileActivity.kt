@@ -14,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.store.R
 import com.example.store.auth.AuthManager
 import com.example.store.auth.ValidationUtils
-import com.example.store.dataBase.DataBaseHelper
+import com.example.store.dataBase.DataBaseUsersHelper
 import com.example.store.databinding.ActivityProfileBinding
 import com.google.android.material.snackbar.Snackbar
 
@@ -22,7 +22,7 @@ class ProfileActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityProfileBinding
     private lateinit var authManager: AuthManager
-    private lateinit var dbHelper: DataBaseHelper
+    private lateinit var dbHelper: DataBaseUsersHelper
     private lateinit var textViewLogin: TextView
     private lateinit var editTextEmail: EditText
     private lateinit var editTextPassword: EditText
@@ -51,7 +51,7 @@ class ProfileActivity : AppCompatActivity() {
 
         // Инициализация AuthManager и DataBaseHelper
         authManager = AuthManager(this)
-        dbHelper = DataBaseHelper(this, null)
+        dbHelper = DataBaseUsersHelper(this, null)
 
         // Настройка NavigationView
         val navigationHelper = NavigationHelper(

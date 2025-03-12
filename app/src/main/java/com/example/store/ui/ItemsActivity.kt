@@ -4,9 +4,7 @@ import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.store.data.Item
 import com.example.store.adapter.ItemsAdapter
-import com.example.store.R
 import com.example.store.dataBase.DataBaseHelper
 import com.example.store.databinding.ActivityItemsBinding
 
