@@ -13,6 +13,8 @@ class StoreApplication : Application() {
         val dbHelperItems = DataBaseItemsHelper(this, null)
         val dbHelperUsers = DataBaseUsersHelper(this, null)
 
+        dbHelperItems.clearItemsTable()
+
         // Проверяем, есть ли уже товары в БД
         val items = dbHelperItems.getAllItems()
         if (items.isEmpty()) {
@@ -55,6 +57,19 @@ class StoreApplication : Application() {
                         R.drawable.air_force_1_07_prm,
                         R.drawable.air_force_1_07_prm2,
                         R.drawable.air_force_1_07_prm3
+                    )
+                ),
+                Item(
+                    4,
+                    "New Balance 996",
+                    "Кроссовки New Balance из новой коллекции. Красивые, удобные",
+                    18000,
+                    "New Balance",
+                    60,
+                    images = listOf(
+                        R.drawable.new_balance_996_1,
+                        R.drawable.new_balance_996_2,
+                        R.drawable.new_balance_996_3,
                     )
                 )
             )

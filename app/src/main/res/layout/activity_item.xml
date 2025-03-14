@@ -1,106 +1,146 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.AuthActivity">
+    tools:context=".ui.ItemActivity">
 
-    <LinearLayout
+    <!-- Основной контент с использованием ConstraintLayout -->
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/background_color"
-        android:orientation="vertical">
+        android:background="@color/background_color">
 
-        <androidx.appcompat.widget.Toolbar
+        <!-- Material Toolbar -->
+        <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@color/navigationBar_color"
-            android:elevation="4dp"
-            android:paddingStart="20dp"
-            android:paddingTop="40dp"
-            app:title="@string/toolbar_title" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:title="@string/toolbar_title"
+            app:popupTheme="@style/ThemeOverlay.MaterialComponents.Light"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="24dp"
+            android:paddingBottom="8dp"/>
 
-        <androidx.cardview.widget.CardView
-            android:layout_width="350dp"
-            android:layout_height="250dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="16dp"
+        <!-- Карточка для изображений товара с адаптивным соотношением сторон -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             app:cardCornerRadius="12dp"
-            app:cardElevation="4dp">
+            app:cardElevation="4dp"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintDimensionRatio="16:9"
+            android:layout_margin="16dp">
 
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/viewPager"
-                android:layout_width="350dp"
-                android:layout_height="250dp"
-                android:layout_gravity="center" />
-        </androidx.cardview.widget.CardView>
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </com.google.android.material.card.MaterialCardView>
 
+        <!-- Заголовок товара -->
+
+        <!-- Описание товара -->
+
+        <!-- Категория товара -->
         <TextView
             android:id="@+id/item_list_title"
-            android:layout_width="match_parent"
+            style="@style/TextAppearance.MaterialComponents.Headline6"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:paddingHorizontal="30dp"
-            android:paddingVertical="10dp"
-            android:text="TextView"
-            android:textSize="28sp"
-            android:textStyle="bold" />
+            android:layout_marginTop="32dp"
+            android:paddingHorizontal="16dp"
+            android:textSize="22sp"
+            android:text="Название товара"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/card_view" />
 
         <TextView
             android:id="@+id/item_list_desc"
-            android:layout_width="match_parent"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:paddingHorizontal="30dp"
-            android:paddingVertical="10dp"
-            android:text="TextView"
-            android:textSize="18sp" />
+            android:layout_marginTop="16dp"
+            android:paddingHorizontal="16dp"
+            android:textSize="18sp"
+            android:text="Описание товара"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/item_list_title" />
 
+        <!-- Количество товара -->
         <TextView
             android:id="@+id/item_list_category"
-            android:layout_width="match_parent"
+            style="@style/TextAppearance.MaterialComponents.Body2"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:paddingHorizontal="30dp"
-            android:paddingVertical="10dp"
-            android:text="TextView"
-            android:textSize="18sp" />
+            android:layout_marginTop="16dp"
+            android:paddingHorizontal="16dp"
+            android:textSize="16sp"
+            android:text="Категория: "
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/item_list_desc" />
 
         <TextView
             android:id="@+id/item_list_count"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:paddingHorizontal="30dp"
-            android:paddingVertical="10dp"
-            android:text="TextView"
-            android:textSize="18sp" />
+            android:text="Количество: "
+            style="@style/TextAppearance.MaterialComponents.Body2"
+            android:paddingHorizontal="16dp"
+            android:textSize="16sp"
+            app:layout_constraintTop_toBottomOf="@id/item_list_category"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp"/>
 
+        <!-- Цена товара -->
         <TextView
             android:id="@+id/item_list_price"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:paddingHorizontal="30dp"
-            android:paddingVertical="10dp"
-            android:text="TextView"
-            android:textAlignment="textEnd"
+            android:text="Цена"
+            style="@style/TextAppearance.MaterialComponents.Subtitle1"
+            android:textStyle="bold"
+            android:paddingHorizontal="18dp"
             android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textAlignment="viewEnd"
+            app:layout_constraintTop_toBottomOf="@id/item_list_count"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp"/>
 
-        <Button
+        <!-- Кнопка покупки -->
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/item_list_button_buy"
-            android:layout_width="180dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="30dp"
+            android:text="Купить"
+            style="@style/Widget.MaterialComponents.Button"
+            app:layout_constraintTop_toBottomOf="@id/item_list_price"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             android:backgroundTint="@color/button_color"
-            android:text="Купить" />
-    </LinearLayout>
+            android:layout_marginTop="16dp"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <!-- Навигационное меню -->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigation_view"
         android:layout_width="wrap_content"
@@ -108,5 +148,5 @@
         android:layout_gravity="start"
         android:background="@color/white"
         app:headerLayout="@layout/navbar_header"
-        app:menu="@menu/nav_menu" />
+        app:menu="@menu/nav_menu"/>
 </androidx.drawerlayout.widget.DrawerLayout>

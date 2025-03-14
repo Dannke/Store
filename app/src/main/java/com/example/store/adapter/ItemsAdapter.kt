@@ -34,6 +34,12 @@ class ItemsAdapter(var items: List<Item>, var context: Context) :
         return items.count()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateItems(newItems: List<Item>) {
+        items = newItems
+        notifyDataSetChanged()
+    }
+
     @SuppressLint("DiscouragedApi")
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val item = items[position]
