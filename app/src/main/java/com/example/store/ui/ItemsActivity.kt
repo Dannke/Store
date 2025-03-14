@@ -110,6 +110,7 @@ class ItemsActivity : AppCompatActivity() {
             adapter.updateItems(filteredItems) // обновляем адаптер новыми товарами
         }
 
+
         adapter.items = filteredItems
         adapter.notifyDataSetChanged()
     }
