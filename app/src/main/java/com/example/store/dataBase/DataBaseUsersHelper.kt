@@ -13,7 +13,7 @@ class DataBaseUsersHelper(context: Context, factory: SQLiteDatabase.CursorFactor
 
     companion object {
         private const val DATABASE_NAME = "store.db"
-        private const val DATABASE_VERSION = 1
+        private const val DATABASE_VERSION = 2
 
         // Таблица пользователей
         private const val TABLE_USERS = "users"
@@ -27,10 +27,17 @@ class DataBaseUsersHelper(context: Context, factory: SQLiteDatabase.CursorFactor
         // Создание таблицы пользователей
         val createUsersTable = ("CREATE TABLE $TABLE_USERS ("
                 + "$COLUMN_USER_ID INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + "$COLUMN_USER_LOGIN TEXT, UNIQUE"
+                + "$COLUMN_USER_LOGIN TEXT UNIQUE, "
                 + "$COLUMN_USER_PASSWORD TEXT,"
                 + "$COLUMN_USER_EMAIL TEXT)")
         db.execSQL(createUsersTable)
+    }
+
+    override fun onOpen(db: SQLiteDatabase) {
+        super.onOpen(db)
+        if (!tableExists(db, TABLE_USERS)) {
+            onCreate(db)
+        }
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -62,6 +69,13 @@ class DataBaseUsersHelper(context: Context, factory: SQLiteDatabase.CursorFactor
         val exists = cursor.count > 0
         cursor.close()
         db.close()
+        return exists
+    }
+
+    private fun tableExists(db: SQLiteDatabase, tableName: String): Boolean {
+        val cursor = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table' AND name=?", arrayOf(tableName))
+        val exists = cursor.count > 0
+        cursor.close()
         return exists
     }
 

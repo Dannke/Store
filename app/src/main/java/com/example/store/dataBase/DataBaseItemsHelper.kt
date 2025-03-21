@@ -12,7 +12,7 @@ class DataBaseItemsHelper(context: Context, factory: SQLiteDatabase.CursorFactor
 
     companion object {
         private const val DATABASE_NAME = "store.db"
-        private const val DATABASE_VERSION = 1
+        private const val DATABASE_VERSION = 2
 
         // Таблица товаров
         private const val TABLE_ITEMS = "items"

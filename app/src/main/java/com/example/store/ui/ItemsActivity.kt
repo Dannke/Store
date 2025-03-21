@@ -11,12 +11,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.store.adapter.ItemsAdapter
 import com.example.store.data.Item
-import com.example.store.dataBase.DataBaseHelper
+import com.example.store.dataBase.DataBaseItemsHelper
 import com.example.store.databinding.ActivityItemsBinding
 
 class ItemsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityItemsBinding
-    private lateinit var dbHelper: DataBaseHelper
+    private lateinit var dbHelper: DataBaseItemsHelper
     private lateinit var adapter: ItemsAdapter
     private var itemsList: List<Item> = listOf()
 
@@ -27,7 +27,7 @@ class ItemsActivity : AppCompatActivity() {
         binding = ActivityItemsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        dbHelper = DataBaseHelper(this, null)
+        dbHelper = DataBaseItemsHelper(this, null)
 
         val navigationHelper = NavigationHelper(
             this,
