@@ -56,7 +56,7 @@ class ItemsActivity : AppCompatActivity() {
         })
 
         // Настройка категорий
-        val categories = listOf("Бренд") + itemsList.map { it.category }.distinct()
+        val categories = listOf("Бренд") + itemsList.map { it.brand }.distinct()
         val categoryAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, categories)
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.categorySpinner.adapter = categoryAdapter
@@ -92,7 +92,7 @@ class ItemsActivity : AppCompatActivity() {
 
         var filteredItems = itemsList.filter {
             it.title.contains(searchText, ignoreCase = true) &&
-                    (selectedCategory == "Бренд" || it.category == selectedCategory)
+                    (selectedCategory == "Бренд" || it.brand == selectedCategory)
         }
 
         filteredItems = when (sortOption) {
@@ -109,8 +109,7 @@ class ItemsActivity : AppCompatActivity() {
             noItemsText.visibility = View.GONE
             adapter.updateItems(filteredItems) // обновляем адаптер новыми товарами
         }
-
-
+        
         adapter.items = filteredItems
         adapter.notifyDataSetChanged()
     }

@@ -70,7 +70,7 @@ class ItemActivity : AppCompatActivity() {
 
         binding.itemListTitle.text = item.title
         binding.itemListDesc.text = "Описание: ${item.desc}"
-        binding.itemListCategory.text = "Категория: ${item.category}"
+        binding.itemListCategory.text = "Категория: ${item.brand}"
         binding.itemListPrice.text = "${item.price} ₽"
 
         // Обновляем текущее количество товара

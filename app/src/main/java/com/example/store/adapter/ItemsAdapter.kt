@@ -55,7 +55,7 @@ class ItemsAdapter(var items: List<Item>, var context: Context) :
             intent.putExtra("itemId", item.id)
             intent.putExtra("itemTitle", items[position].title)
             intent.putExtra("itemDesc", items[position].desc)
-            intent.putExtra("itemCategory", items[position].category)
+            intent.putExtra("itemCategory", items[position].brand)
             intent.putExtra("itemCount", items[position].count)
             intent.putExtra("itemPrice", items[position].price)
             intent.putIntegerArrayListExtra("itemImages", ArrayList(item.images))

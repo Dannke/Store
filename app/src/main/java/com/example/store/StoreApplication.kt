@@ -72,6 +72,19 @@ class StoreApplication : Application() {
                         R.drawable.new_balance_996_2,
                         R.drawable.new_balance_996_3,
                     )
+                ),
+                Item(
+                    5,
+                    "New balance 2002",
+                    "Кроссовки выполнены из натуральной кожи с сетчатым верхом.",
+                    19000,
+                    "New Balance",
+                    25,
+                    images = listOf(
+                        R.drawable.new_balance_2002_brown1,
+                        R.drawable.new_balance_2002_brown2,
+                        R.drawable.new_balance_2002_brown3,
+                    )
                 )
             )
 

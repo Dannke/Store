@@ -5,7 +5,6 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.example.store.data.Item
-import com.example.store.data.User
 
 class DataBaseItemsHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
     SQLiteOpenHelper(context, DATABASE_NAME, factory, DATABASE_VERSION) {
@@ -59,7 +58,7 @@ class DataBaseItemsHelper(context: Context, factory: SQLiteDatabase.CursorFactor
             put(COLUMN_ITEM_TITLE, item.title)
             put(COLUMN_ITEM_DESC, item.desc)
             put(COLUMN_ITEM_PRICE, item.price)
-            put(COLUMN_ITEM_CATEGORY, item.category)
+            put(COLUMN_ITEM_CATEGORY, item.brand)
             put(COLUMN_ITEM_COUNT, item.count)
             put(COLUMN_ITEM_IMAGES, item.images.joinToString(",")) // Сохраняем изображения как строку
         }
@@ -119,7 +118,7 @@ class DataBaseItemsHelper(context: Context, factory: SQLiteDatabase.CursorFactor
                     title = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ITEM_TITLE)),
                     desc = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ITEM_DESC)),
                     price = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ITEM_PRICE)),
-                    category = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ITEM_CATEGORY)),
+                    brand = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ITEM_CATEGORY)),
                     count = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ITEM_COUNT)),
                     images = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ITEM_IMAGES))
                         .split(",").map { it.toInt() }
