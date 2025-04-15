@@ -8,13 +8,16 @@ import androidx.core.content.ContextCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.example.store.R
 import com.example.store.adapter.ImagePagerAdapter
+import com.example.store.data.Item
 import com.example.store.dataBase.DataBaseItemsHelper
 import com.example.store.databinding.ActivityItemBinding
+import com.example.store.util.CartManager
 import com.google.android.material.snackbar.Snackbar
 
 class ItemActivity : AppCompatActivity() {
     private lateinit var binding: ActivityItemBinding
     private lateinit var dbHelper: DataBaseItemsHelper
+    private lateinit var currentItem: Item
     private var itemId: Int = -1
     private var currentCount: Int = 0
     private lateinit var images: List<Int> // Список изображений
@@ -67,6 +70,7 @@ class ItemActivity : AppCompatActivity() {
             finish()
             return
         }
+        currentItem = item
 
         binding.itemListTitle.text = item.title
         binding.itemListDesc.text = "Описание: ${item.desc}"
@@ -124,6 +128,10 @@ class ItemActivity : AppCompatActivity() {
                 currentCount -= 1
                 updateCountUI()
                 Snackbar.make(binding.root, "Товар куплен!", Snackbar.LENGTH_SHORT).show()
+                val item = dbHelper.getItemById(itemId)
+                if (item != null) {
+                    CartManager.addItem(item,1)
+                }
             } else {
                 Snackbar.make(binding.root, "Товар закончился", Snackbar.LENGTH_SHORT).show()
             }

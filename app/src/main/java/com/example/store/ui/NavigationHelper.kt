@@ -50,7 +50,11 @@ class NavigationHelper(
                 }
 
                 R.id.nav_orders -> {
-                    // Переход на экран заказов
+                    if (activity !is CartActivity) {
+                        val intent = Intent(context, CartActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        context.startActivity(intent)
+                    }
                 }
 
                 R.id.nav_logout -> {
