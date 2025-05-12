@@ -12,4 +12,5 @@
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
     <string name="toolbar_title">Меню</string>
+    <string name="link_to_items"><u>Перейти к покупкам</u></string>
 </resources>

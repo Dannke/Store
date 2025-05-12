@@ -13,8 +13,8 @@ class StoreApplication : Application() {
         val dbHelperItems = DataBaseItemsHelper(this, null)
         val dbHelperUsers = DataBaseUsersHelper(this, null)
 
-        //dbHelperItems.clearItemsTable(
-        //dbHelperUsers.clearUserTable()
+        dbHelperItems.clearItemsTable()
+        dbHelperUsers.clearUserTable()
 
         // Проверяем, есть ли уже товары в БД
         val items = dbHelperItems.getAllItems()

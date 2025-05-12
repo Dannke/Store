@@ -1,8 +1,11 @@
 package com.example.store.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.store.dataBase.DataBaseItemsHelper
@@ -18,6 +21,7 @@ class CartActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         binding = ActivityCartBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -40,6 +44,8 @@ class CartActivity : AppCompatActivity() {
         binding.cartItemsList.adapter = adapter
 
         updateTotalSum()
+        updateCartState()
+        switchToItems()
 
         binding.payButton.setOnClickListener {
             // Обработка оплаты (пример – можно расширить функционал оплаты)
@@ -61,14 +67,24 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun removeCartItem(cartItem: CartItem) {
-        // Удаляем элемент из корзины
-        CartManager.cartItems.remove(cartItem)
-        adapter.updateCartItems(CartManager.cartItems)
+        // Уменьшаем количество на 1
+        if (cartItem.quantity > 1) {
+            cartItem.quantity--
+            val currentCount = dbHelper.getItemCount(cartItem.item.id)
+            dbHelper.setItemCount(cartItem.item.id, currentCount + 1)
+            // Обновляем список в адаптере
+            adapter.updateCartItems(CartManager.cartItems)
+        } else {
+            // Если это была последняя штука — удаляем весь объект
+            CartManager.cartItems.remove(cartItem)
+            adapter.updateCartItems(CartManager.cartItems)
+            val currentCount = dbHelper.getItemCount(cartItem.item.id)
+            dbHelper.setItemCount(cartItem.item.id, currentCount + 1)
+        }
         updateTotalSum()
-        // Возвращаем удалённое количество товара в магазин
-        val currentCount = dbHelper.getItemCount(cartItem.item.id)
-        dbHelper.setItemCount(cartItem.item.id, currentCount + cartItem.quantity)
+        updateCartState()
     }
+
 
     private fun clearCart() {
         // Для каждого элемента из корзины возвращаем товары в магазин
@@ -79,10 +95,33 @@ class CartActivity : AppCompatActivity() {
         CartManager.clearCart()
         adapter.updateCartItems(CartManager.cartItems)
         updateTotalSum()
+        updateCartState()
     }
 
     private fun updateTotalSum() {
         val total = CartManager.totalSum()
         binding.totalSumText.text = "Общая сумма: $total ₽"
+    }
+
+    private fun updateCartState() {
+        val isEmpty = CartManager.cartItems.isEmpty()
+        binding.emptyCartText.visibility = if (isEmpty) View.VISIBLE else View.GONE
+        binding.linkToItems.visibility = if (isEmpty) View.VISIBLE else View.GONE
+        binding.cartItemsList.visibility = if (isEmpty) View.GONE else View.VISIBLE
+        // Кнопки
+        binding.clearCartButton.isEnabled = !isEmpty
+        binding.payButton.isEnabled = !isEmpty
+        binding.clearCartButton.alpha = if (isEmpty) 0.5f else 1f
+        binding.payButton.alpha = if (isEmpty) 0.5f else 1f
+    }
+
+    private fun switchToItems() {
+        val linkToItems = binding.linkToItems
+
+        linkToItems.setOnClickListener {
+            val intent = Intent(this, ItemsActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent)
+        }
     }
 }
